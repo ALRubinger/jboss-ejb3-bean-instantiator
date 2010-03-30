@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!--
+    EJB3 Bean Instantiator Deployer
+-->
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+
+  <bean name="org.jboss.ejb3.BeanInstantiatorDeployer"
+    class="org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer">
+    <!-- Assume we get the beanInstantiator autowired -->
+    <constructor>
+      <parameter name="beanInstantiator"><inject /></parameter>
+    </constructor>
+  </bean>
+
+</deployment>

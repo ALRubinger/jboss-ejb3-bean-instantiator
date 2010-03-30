@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!--
+    Declares a EJB3 Bean Instantiator
+-->
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+
+  <bean name="org.jboss.ejb3.BeanInstantiator"
+    class="org.jboss.ejb3.instantiator.impl.Ejb31SpecBeanInstantiator" />
+
+</deployment>

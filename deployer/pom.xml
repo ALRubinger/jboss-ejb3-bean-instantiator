@@ -1,0 +1,139 @@
+<!--
+  vi:ts=2:sw=2:expandtab
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Define Parent -->
+  <parent>
+    <groupId>org.jboss.ejb3.instantiator</groupId>
+    <artifactId>instantiator-build</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Maven POM Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Information -->
+  <artifactId>instantiator-deployer</artifactId>
+  <packaging>jar</packaging>
+  <name>JBoss EJB 3.x Instantiator Deployer</name>
+  <description>Integration Deployers for JBoss EJB 3.x Bean Instance Creators</description>
+
+  <!-- Build Configuration -->
+  <build>
+  
+    
+  </build>
+  
+  <properties>
+  
+    <version.org.jboss.metadata_jboss.metadata>1.0.4</version.org.jboss.metadata_jboss.metadata>
+    <version.org.jboss.deployers.jboss_deployers_spi>2.2.0.Alpha4</version.org.jboss.deployers.jboss_deployers_spi>
+    <version.org.jboss.reloaded_jboss.reloaded.vdf.bootstrap.minimal>0.1.1</version.org.jboss.reloaded_jboss.reloaded.vdf.bootstrap.minimal>
+    <version.org.jboss.kernel>2.2.0.Alpha2</version.org.jboss.kernel>
+    <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
+    <version.org.jboss.logmanager>1.2.0.CR1</version.org.jboss.logmanager>
+  
+  </properties>
+
+  <dependencies>
+  
+    <!-- 
+    Dependencies: org.jboss.ejb3.instantiator
+    -->
+   <dependency>
+     <groupId>org.jboss.ejb3.instantiator</groupId>
+     <artifactId>instantiator-spi</artifactId>
+     <version>${version}</version>
+   </dependency>
+    
+    
+    <!-- 
+    Dependencies: External to EJB3 
+    -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.deployers</groupId>
+      <artifactId>jboss-deployers-spi</artifactId>
+      <version>${version.org.jboss.deployers.jboss_deployers_spi}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.kernel</groupId>
+      <artifactId>jboss-kernel</artifactId>
+      <version>${version.org.jboss.kernel}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.ejb3.instantiator</groupId>
+      <artifactId>instantiator-impl</artifactId>
+      <version>${version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.metadata</groupId>
+      <artifactId>jboss-metadata</artifactId>
+      <version>${version.org.jboss.metadata_jboss.metadata}</version>
+      <scope>provided</scope>
+      <!-- Correct versions should come in through Reloaded or Deployers -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-vfs</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-mdr</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.reloaded</groupId>
+      <artifactId>jboss-reloaded-vdf-bootstrap-minimal</artifactId>
+      <version>${version.org.jboss.reloaded_jboss.reloaded.vdf.bootstrap.minimal}</version>
+      <scope>test</scope>
+    </dependency>
+    
+  </dependencies>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-spi</artifactId>
+        <version>${version.jboss.logging}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-log4j</artifactId>
+        <version>${version.jboss.logging}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-logmanager</artifactId>
+        <version>${version.jboss.logging}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logmanager</groupId>
+        <artifactId>jboss-logmanager</artifactId>
+        <version>${version.org.jboss.logmanager}</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
