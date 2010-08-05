@@ -17,7 +17,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Information -->
-  <artifactId>instantiator-spi</artifactId>
+  <artifactId>jboss-ejb3-instantiator-spi</artifactId>
   <packaging>jar</packaging>
   <name>JBoss EJB 3.x Instantiator SPI</name>
   <description>Service Provider Interface for JBoss EJB 3.x Bean Instance Creators</description>

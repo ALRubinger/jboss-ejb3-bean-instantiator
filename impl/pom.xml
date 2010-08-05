@@ -17,7 +17,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Information -->
-  <artifactId>instantiator-impl</artifactId>
+  <artifactId>jboss-ejb3-instantiator-impl</artifactId>
   <packaging>jar</packaging>
   <name>JBoss EJB 3.x Instantiator Implementation</name>
   <description>Implementation for JBoss EJB 3.x Bean Instance Creators</description>
