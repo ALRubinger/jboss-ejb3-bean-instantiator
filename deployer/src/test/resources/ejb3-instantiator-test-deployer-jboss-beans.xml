@@ -8,10 +8,10 @@
   <bean name="org.jboss.ejb3.BeanInstantiatorDeployer"
     class="org.jboss.ejb3.instantiator.deployer.TestBeanInstantiatorDeployer">
     <constructor>
-      <parameter name="beanInstantiator"><inject /></parameter>
+      <parameter name="beanInstantiator"><inject bean="org.jboss.ejb3.BeanInstantiator"/></parameter>
     </constructor>
   </bean>
-  
+
   <bean name="org.jboss.ejb3.BeanInstantiator"
     class="org.jboss.ejb3.instantiator.impl.Ejb31SpecBeanInstantiator" />
 

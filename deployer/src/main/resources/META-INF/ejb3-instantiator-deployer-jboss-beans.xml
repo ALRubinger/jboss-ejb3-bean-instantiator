@@ -5,11 +5,11 @@
 -->
 <deployment xmlns="urn:jboss:bean-deployer:2.0">
 
+  <!-- The BeanInstantiatorDeployer attaches a BeanInstantiator implementation to the EJB3 DU -->
   <bean name="org.jboss.ejb3.BeanInstantiatorDeployer"
     class="org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer">
-    <!-- Assume we get the beanInstantiator autowired -->
     <constructor>
-      <parameter name="beanInstantiator"><inject /></parameter>
+      <parameter name="beanInstantiator"><inject bean="org.jboss.ejb3.BeanInstantiator"/></parameter>
     </constructor>
   </bean>
 

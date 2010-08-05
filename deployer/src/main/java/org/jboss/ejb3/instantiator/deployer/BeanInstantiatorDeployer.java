@@ -21,7 +21,6 @@
  */
 package org.jboss.ejb3.instantiator.deployer;
 
-import org.jboss.beans.metadata.api.annotations.Inject;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
@@ -31,7 +30,7 @@ import org.jboss.metadata.ejb.jboss.JBossMetaData;
 
 /**
  * VDF Deployer to attach a {@link BeanInstantiator} implementation
- * (from autowiring) to the current EJB3 {@link DeploymentUnit}
+ * to the current EJB3 {@link DeploymentUnit}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -63,7 +62,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    // Constructor ------------------------------------------------------------------||
    // ------------------------------------------------------------------------------||
 
-   public BeanInstantiatorDeployer(@Inject final BeanInstantiator beanInstantiator)
+   public BeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
    {
       this.beanInstantiator = beanInstantiator;
    }
@@ -99,7 +98,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    }
 
    // ------------------------------------------------------------------------------||
-   // Helper Methods --------------------------------------------------------------||
+   // Helper Methods ---------------------------------------------------------------||
    // ------------------------------------------------------------------------------||
 
    /*

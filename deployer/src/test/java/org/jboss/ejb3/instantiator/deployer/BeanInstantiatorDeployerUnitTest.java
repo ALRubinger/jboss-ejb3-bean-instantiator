@@ -164,11 +164,11 @@ public class BeanInstantiatorDeployerUnitTest
             .getTarget();
       TestCase.assertNotNull(MainDeployer.class.getName() + " instance was not installed into MC", mainDeployer);
       this.deployer = mainDeployer;
-
-      // Deploy the Bean Instantiator Deployer
-      final VirtualFile beanInstantiatorDeployerFile = VFS.getChild(this.getClass().getClassLoader().getResource(
-            "ejb3-instantiator-test-deployer-jboss-beans.xml").toURI());
-      deployer.deploy(VFSDeploymentFactory.getInstance().createVFSDeployment(beanInstantiatorDeployerFile));
+      
+      // Deploy the test Bean Instantiator Impl and deployer
+      final VirtualFile testInstantiatorFile = VFS.getChild(this.getClass().getClassLoader()
+            .getResource("ejb3-instantiator-test-deployer-jboss-beans.xml").toURI());
+      deployer.deploy(VFSDeploymentFactory.getInstance().createVFSDeployment(testInstantiatorFile));
 
       // Deploy a dummy
       final String deploymentName = "dummyDeployment";
