@@ -39,6 +39,15 @@ import org.junit.Test;
 public class Ejb31SpecBeanInstantiatorUnitTest
 {
    //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Empty String
+    */
+   private static final String EMPTY = "";
+
+   //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
@@ -111,7 +120,7 @@ public class Ejb31SpecBeanInstantiatorUnitTest
       try
       {
          instantiator.create(Pojo.class, new Object[]
-         {""});
+         {EMPTY});
       }
       catch (final BeanInstantiationException e)
       {
