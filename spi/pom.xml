@@ -9,7 +9,7 @@
   <parent>
     <groupId>org.jboss.ejb3.instantiator</groupId>
     <artifactId>instantiator-build</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0.0-alpha-1-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
 
