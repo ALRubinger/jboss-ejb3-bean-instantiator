@@ -38,6 +38,7 @@ import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.deployers.vfs.spi.client.VFSDeployment;
 import org.jboss.deployers.vfs.spi.client.VFSDeploymentFactory;
+import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.kernel.spi.dependency.KernelController;
 import org.jboss.logging.Logger;
@@ -213,7 +214,8 @@ public class BeanInstantiatorDeployerUnitTest
       TestCase.assertNotNull("Could not obtain cached deployment unit to test", unit);
 
       // Ensure the attachment is in place
-      final BeanInstantiator instantiator = unit.getAttachment(BeanInstantiator.class);
+      final BeanInstantiator instantiator = unit.getAttachment(AttachmentNames.NAME_BEAN_INSTANCE_INSTANTIATOR,
+            BeanInstantiator.class);
       TestCase.assertNotNull(instantiator);
 
    }

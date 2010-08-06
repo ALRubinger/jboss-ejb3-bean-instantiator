@@ -24,6 +24,7 @@ package org.jboss.ejb3.instantiator.deployer;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
+import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
@@ -90,7 +91,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
       }
 
       // Attach 
-      unit.addAttachment(BeanInstantiator.class, beanInstantiator);
+      unit.addAttachment(AttachmentNames.NAME_BEAN_INSTANCE_INSTANTIATOR, beanInstantiator);
       if (log.isTraceEnabled())
       {
          log.trace("Using bean instantiator " + beanInstantiator + " for " + unit);
