@@ -8,7 +8,7 @@
   <!-- Define Parent -->
   <parent>
     <groupId>org.jboss.ejb3.instantiator</groupId>
-    <artifactId>instantiator-build</artifactId>
+    <artifactId>jboss-ejb3-instantiator-build</artifactId>
     <version>1.0.0-alpha-1-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
@@ -46,8 +46,8 @@
     -->
    <dependency>
      <groupId>org.jboss.ejb3.instantiator</groupId>
-     <artifactId>instantiator-spi</artifactId>
-     <version>${version}</version>
+     <artifactId>jboss-ejb3-instantiator-spi</artifactId>
+     <version>${project.version}</version>
    </dependency>
     
     
@@ -75,8 +75,8 @@
     
     <dependency>
       <groupId>org.jboss.ejb3.instantiator</groupId>
-      <artifactId>instantiator-impl</artifactId>
-      <version>${version}</version>
+      <artifactId>jboss-ejb3-instantiator-impl</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     
