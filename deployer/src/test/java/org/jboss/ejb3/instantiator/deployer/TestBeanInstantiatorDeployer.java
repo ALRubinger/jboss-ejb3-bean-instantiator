@@ -25,6 +25,7 @@ import org.jboss.beans.metadata.api.annotations.Inject;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
+import org.jboss.metadata.ejb.jboss.JBossMetaData;
 
 /**
  * Extension of the {@link BeanInstantiatorDeployer} used in testing.

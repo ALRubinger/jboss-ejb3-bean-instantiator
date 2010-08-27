@@ -35,6 +35,8 @@ import org.jboss.bootstrap.api.mc.server.MCServer;
 import org.jboss.bootstrap.api.mc.server.MCServerFactory;
 import org.jboss.deployers.client.spi.main.MainDeployer;
 import org.jboss.deployers.spi.DeploymentException;
+import org.jboss.deployers.spi.attachments.AttachmentsFactory;
+import org.jboss.deployers.spi.attachments.MutableAttachments;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.deployers.vfs.spi.client.VFSDeployment;
 import org.jboss.deployers.vfs.spi.client.VFSDeploymentFactory;
@@ -42,6 +44,7 @@ import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.kernel.spi.dependency.KernelController;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ejb.jboss.JBossMetaData;
 import org.jboss.reloaded.api.ReloadedDescriptors;
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
@@ -178,6 +181,12 @@ public class BeanInstantiatorDeployerUnitTest
       final VirtualFile deploymentVf = VFS.getChild(this.getClass().getClassLoader().getResource(deploymentName)
             .toURI());
       final VFSDeployment dummyDeployment = VFSDeploymentFactory.getInstance().createVFSDeployment(deploymentVf);
+      // add JBossMetaData as an attachment (our BeanInstantiatorDeployer picks up only those deployments which
+      // have JBossMetaData as an attachment)
+      MutableAttachments attachments = AttachmentsFactory.createMutableAttachments();
+      attachments.addAttachment(JBossMetaData.class, new JBossMetaData());
+      dummyDeployment.setPredeterminedManagedObjects(attachments);
+      // add the deployment to the MainDeployer
       deployer.addDeployment(dummyDeployment);
       this.dummyDeployment = dummyDeployment;
 

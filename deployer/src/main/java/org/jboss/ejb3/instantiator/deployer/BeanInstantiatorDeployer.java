@@ -22,6 +22,7 @@
 package org.jboss.ejb3.instantiator.deployer;
 
 import org.jboss.deployers.spi.DeploymentException;
+import org.jboss.deployers.spi.deployer.DeploymentStages;
 import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.AttachmentNames;
@@ -66,6 +67,9 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    public BeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
    {
       this.beanInstantiator = beanInstantiator;
+      // set the deployer to pick up EJB deployments during POST_CLASSLOADER stage 
+      this.setStage(DeploymentStages.POST_CLASSLOADER);
+      this.setInput(JBossMetaData.class);
    }
 
    // ------------------------------------------------------------------------------||
