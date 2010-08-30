@@ -27,7 +27,7 @@ import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.ejb.jboss.JBossMetaData;
+import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
 
 /**
  * VDF Deployer to attach a {@link BeanInstantiator} implementation
@@ -79,7 +79,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    public void deploy(final DeploymentUnit unit) throws DeploymentException
    {
       // If not an EJB3 deployment, take no action
-      if (!this.isEjb3Deployment(unit))
+      if (!this.isEjb3ComponentDeployment(unit))
       {
          return;
       }
@@ -111,19 +111,19 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
     * @param unit
     * @return
     */
-   boolean isEjb3Deployment(final DeploymentUnit unit)
+   boolean isEjb3ComponentDeployment(final DeploymentUnit unit)
    {
       // Obtain the Merged Metadata
-      final JBossMetaData md = unit.getAttachment(JBossMetaData.class);
+      final JBossEnterpriseBeanMetaData ejb = unit.getAttachment(JBossEnterpriseBeanMetaData.class);
 
       // If metadata's not present as an attachment, return
-      if (md == null)
+      if (ejb == null)
       {
          return false;
       }
 
       // If this is not an EJB3 Deployment, return
-      if (!md.isEJB3x())
+      if (ejb.getJBossMetaData().isEJB3x())
       {
          return false;
       }

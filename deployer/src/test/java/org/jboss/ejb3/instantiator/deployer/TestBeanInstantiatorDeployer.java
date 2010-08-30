@@ -62,10 +62,10 @@ public class TestBeanInstantiatorDeployer extends BeanInstantiatorDeployer
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer#isEjb3Deployment(org.jboss.deployers.structure.spi.DeploymentUnit)
+    * @see org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer#isEjb3ComponentDeployment(org.jboss.deployers.structure.spi.DeploymentUnit)
     */
    @Override
-   boolean isEjb3Deployment(final DeploymentUnit unit)
+   boolean isEjb3ComponentDeployment(final DeploymentUnit unit)
    {
       // Assume for testing we're an EJB3 deployment
       return true;
