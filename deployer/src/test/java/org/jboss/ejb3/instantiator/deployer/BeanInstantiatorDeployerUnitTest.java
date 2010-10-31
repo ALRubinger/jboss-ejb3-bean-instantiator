@@ -33,6 +33,7 @@ import junit.framework.TestCase;
 import org.jboss.bootstrap.api.descriptor.BootstrapDescriptor;
 import org.jboss.bootstrap.api.mc.server.MCServer;
 import org.jboss.bootstrap.api.mc.server.MCServerFactory;
+import org.jboss.dependency.spi.ControllerContext;
 import org.jboss.deployers.client.spi.main.MainDeployer;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
@@ -218,18 +219,17 @@ public class BeanInstantiatorDeployerUnitTest
    @Test
    public void beanInstantiatorDeployerInstallsIntoMc() throws IOException, URISyntaxException, DeploymentException
    {
-      // Get the last deployment
-      final DeploymentUnit unit = TestBeanInstantiatorDeployer.lastDeployment;
-      TestCase.assertNotNull("Could not obtain cached deployment unit to test", unit);
-
       // Ensure the attachment is in place
       final String expectedBindName = BeanInstantiatorDeployerBase.MC_NAMESPACE_PREFIX
             + deploymentFile.toURI().toString().replace("file:/", "file:///") + "/MockEJB";
       log.info("Looking for: " + expectedBindName);
-      final BeanInstantiator instantiator = (BeanInstantiator) server.getKernel().getController()
-            .getInstalledContext(expectedBindName).getTarget();
+      final ControllerContext instantiatorContext = server.getKernel().getController()
+            .getInstalledContext(expectedBindName);
       TestCase.assertNotNull("The " + BeanInstantiator.class.getSimpleName()
-            + " implementation was not installed into MC as expected under name " + expectedBindName, instantiator);
+            + " implementation was not installed into MC as expected under name " + expectedBindName,
+            instantiatorContext);
+      TestCase.assertTrue("The instance installed into MC at " + expectedBindName + " was not of type "
+            + BeanInstantiator.class.getName(), instantiatorContext.getTarget() instanceof BeanInstantiator);
 
    }
 }

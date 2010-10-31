@@ -79,5 +79,4 @@ public class SingletonBeanInstantiatorDeployer extends BeanInstantiatorDeployerB
       // Use the shared instance
       return beanInstantiator;
    }
-
 }
