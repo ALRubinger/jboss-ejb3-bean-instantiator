@@ -10,9 +10,13 @@
     <constructor>
       <parameter name="beanInstantiator"><inject bean="org.jboss.ejb3.BeanInstantiator"/></parameter>
     </constructor>
+    <property name="kernel"><inject bean="JBossServer" property="kernel" /></property>
   </bean>
 
   <bean name="org.jboss.ejb3.BeanInstantiator"
     class="org.jboss.ejb3.instantiator.impl.Ejb31SpecBeanInstantiator" />
+    
+   <bean name="org.jboss.ejb3.MockEjb3Deployer"
+    class="org.jboss.ejb3.instantiator.deployer.MockEjb3Deployer" />
 
 </deployment>

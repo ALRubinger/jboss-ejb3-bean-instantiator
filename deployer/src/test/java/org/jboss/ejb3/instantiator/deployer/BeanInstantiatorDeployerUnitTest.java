@@ -38,7 +38,6 @@ import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.deployers.vfs.spi.client.VFSDeployment;
 import org.jboss.deployers.vfs.spi.client.VFSDeploymentFactory;
-import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.kernel.spi.dependency.KernelController;
 import org.jboss.logging.Logger;
@@ -51,7 +50,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Ensures the {@link BeanInstantiatorDeployer} is working as expected
+ * Ensures the {@link SingletonBeanInstantiatorDeployer} is working as expected
  * by attaching a {@link BeanInstantiator} implementation to the incoming
  * {@link DeploymentUnit}.
  *
@@ -100,7 +99,7 @@ public class BeanInstantiatorDeployerUnitTest
    private MainDeployer deployer;
 
    /**
-    * Dummy deployment to run through the {@link BeanInstantiatorDeployer}
+    * Dummy deployment to run through the {@link SingletonBeanInstantiatorDeployer}
     */
    private VFSDeployment dummyDeployment;
 
@@ -147,6 +146,21 @@ public class BeanInstantiatorDeployerUnitTest
       server = mcServer;
    }
 
+   static final String deploymentName = "dummyDeployment";
+
+   static File deploymentFile;
+   {
+      try
+      {
+         deploymentFile = new File(BeanInstantiatorDeployerUnitTest.class.getClassLoader().getResource(deploymentName)
+               .toURI());
+      }
+      catch (final URISyntaxException e)
+      {
+         throw new RuntimeException("Problem in test setup", e);
+      }
+   }
+
    /**
     * Starts the server before each test
     * @throws Exception
@@ -165,25 +179,20 @@ public class BeanInstantiatorDeployerUnitTest
             .getTarget();
       TestCase.assertNotNull(MainDeployer.class.getName() + " instance was not installed into MC", mainDeployer);
       this.deployer = mainDeployer;
-      
+
       // Deploy the test Bean Instantiator Impl and deployer
       final VirtualFile testInstantiatorFile = VFS.getChild(this.getClass().getClassLoader()
             .getResource("ejb3-instantiator-test-deployer-jboss-beans.xml").toURI());
       deployer.deploy(VFSDeploymentFactory.getInstance().createVFSDeployment(testInstantiatorFile));
 
       // Deploy a dummy
-      final String deploymentName = "dummyDeployment";
-      final File deploymentFile = new File(this.getClass().getClassLoader().getResource(deploymentName).toURI());
+
       TestCase.assertTrue(deploymentFile.exists());
       final VirtualFile deploymentVf = VFS.getChild(this.getClass().getClassLoader().getResource(deploymentName)
             .toURI());
       final VFSDeployment dummyDeployment = VFSDeploymentFactory.getInstance().createVFSDeployment(deploymentVf);
-      deployer.addDeployment(dummyDeployment);
+      deployer.deploy(dummyDeployment);
       this.dummyDeployment = dummyDeployment;
-
-      // Run the pending deployments
-      deployer.process();
-      deployer.checkComplete();
    }
 
    /**
@@ -203,21 +212,24 @@ public class BeanInstantiatorDeployerUnitTest
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures the {@link BeanInstantiatorDeployer} attaches the {@link BeanInstantiator} implementation
+    * Ensures the {@link SingletonBeanInstantiatorDeployer} attaches the {@link BeanInstantiator} implementation
     * to the deployment unit
     */
    @Test
-   public void beanInstantiatorDeployerCreatesAttachments() throws IOException, URISyntaxException, DeploymentException
+   public void beanInstantiatorDeployerInstallsIntoMc() throws IOException, URISyntaxException, DeploymentException
    {
       // Get the last deployment
       final DeploymentUnit unit = TestBeanInstantiatorDeployer.lastDeployment;
       TestCase.assertNotNull("Could not obtain cached deployment unit to test", unit);
 
       // Ensure the attachment is in place
-      final BeanInstantiator instantiator = unit.getAttachment(AttachmentNames.NAME_BEAN_INSTANCE_INSTANTIATOR,
-            BeanInstantiator.class);
-      TestCase.assertNotNull(instantiator);
+      final String expectedBindName = BeanInstantiatorDeployerBase.MC_NAMESPACE_PREFIX
+            + deploymentFile.toURI().toString().replace("file:/", "file:///") + "/MockEJB";
+      log.info("Looking for: " + expectedBindName);
+      final BeanInstantiator instantiator = (BeanInstantiator) server.getKernel().getController()
+            .getInstalledContext(expectedBindName).getTarget();
+      TestCase.assertNotNull("The " + BeanInstantiator.class.getSimpleName()
+            + " implementation was not installed into MC as expected under name " + expectedBindName, instantiator);
 
    }
-
 }

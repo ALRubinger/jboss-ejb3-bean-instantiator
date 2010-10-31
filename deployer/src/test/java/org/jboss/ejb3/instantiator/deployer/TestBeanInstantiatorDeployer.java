@@ -27,13 +27,13 @@ import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 
 /**
- * Extension of the {@link BeanInstantiatorDeployer} used in testing.
+ * Extension of the {@link SingletonBeanInstantiatorDeployer} used in testing.
  * Caches statically the last deployment received.  Not thread-safe.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class TestBeanInstantiatorDeployer extends BeanInstantiatorDeployer
+public class TestBeanInstantiatorDeployer extends SingletonBeanInstantiatorDeployer
 {
 
    /**
@@ -48,7 +48,7 @@ public class TestBeanInstantiatorDeployer extends BeanInstantiatorDeployer
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer#deploy(org.jboss.deployers.structure.spi.DeploymentUnit)
+    * @see org.jboss.ejb3.instantiator.deployer.SingletonBeanInstantiatorDeployer#deploy(org.jboss.deployers.structure.spi.DeploymentUnit)
     */
    @Override
    public void deploy(final DeploymentUnit unit) throws DeploymentException
@@ -60,12 +60,8 @@ public class TestBeanInstantiatorDeployer extends BeanInstantiatorDeployer
       lastDeployment = unit;
    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployer#isEjb3ComponentDeployment(org.jboss.deployers.structure.spi.DeploymentUnit)
-    */
    @Override
-   boolean isEjb3ComponentDeployment(final DeploymentUnit unit)
+   boolean isEjb3ModuleDeployment(final DeploymentUnit unit)
    {
       // Assume for testing we're an EJB3 deployment
       return true;

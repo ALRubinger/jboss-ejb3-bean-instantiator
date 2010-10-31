@@ -21,23 +21,20 @@
  */
 package org.jboss.ejb3.instantiator.deployer;
 
-import org.jboss.deployers.spi.DeploymentException;
-import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
-import org.jboss.ejb3.instantiator.spi.AttachmentNames;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
 
 /**
- * VDF Deployer to attach a {@link BeanInstantiator} implementation
+ * VDF Deployer to attach a single shared {@link BeanInstantiator} implementation
  * to the current EJB3 {@link DeploymentUnit}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 
-public class BeanInstantiatorDeployer extends AbstractDeployer
+public class SingletonBeanInstantiatorDeployer extends BeanInstantiatorDeployerBase
 {
 
    // ------------------------------------------------------------------------------||
@@ -47,7 +44,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(BeanInstantiatorDeployer.class);
+   private static final Logger log = Logger.getLogger(SingletonBeanInstantiatorDeployer.class);
 
    // ------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------||
@@ -63,7 +60,7 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
    // Constructor ------------------------------------------------------------------||
    // ------------------------------------------------------------------------------||
 
-   public BeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
+   public SingletonBeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
    {
       this.beanInstantiator = beanInstantiator;
    }
@@ -74,62 +71,13 @@ public class BeanInstantiatorDeployer extends AbstractDeployer
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.deployers.spi.deployer.Deployer#deploy(org.jboss.deployers.structure.spi.DeploymentUnit)
+    * @see org.jboss.ejb3.instantiator.deployer.BeanInstantiatorDeployerBase#getBeanInstantiator(org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData)
     */
-   public void deploy(final DeploymentUnit unit) throws DeploymentException
+   @Override
+   protected BeanInstantiator getBeanInstantiator(final JBossEnterpriseBeanMetaData ebmd)
    {
-      // If not an EJB3 deployment, take no action
-      if (!this.isEjb3ComponentDeployment(unit))
-      {
-         return;
-      }
-
-      // Ensure the instantiator was injected
-      if (beanInstantiator == null)
-      {
-         throw new IllegalStateException("Bean instantiator implemenentation was not injected");
-      }
-
-      // Attach 
-      unit.addAttachment(AttachmentNames.NAME_BEAN_INSTANCE_INSTANTIATOR, beanInstantiator);
-      if (log.isTraceEnabled())
-      {
-         log.trace("Using bean instantiator " + beanInstantiator + " for " + unit);
-      }
-   }
-
-   // ------------------------------------------------------------------------------||
-   // Helper Methods ---------------------------------------------------------------||
-   // ------------------------------------------------------------------------------||
-
-   /*
-    * These may be overridden for testing purposes
-    */
-
-   /**
-    * Returns whether this is an EJB3 Deployment, determining if we should take action
-    * @param unit
-    * @return
-    */
-   boolean isEjb3ComponentDeployment(final DeploymentUnit unit)
-   {
-      // Obtain the Merged Metadata
-      final JBossEnterpriseBeanMetaData ejb = unit.getAttachment(JBossEnterpriseBeanMetaData.class);
-
-      // If metadata's not present as an attachment, return
-      if (ejb == null)
-      {
-         return false;
-      }
-
-      // If this is not an EJB3 Deployment, return
-      if (ejb.getJBossMetaData().isEJB3x())
-      {
-         return false;
-      }
-
-      // Meets conditions
-      return true;
+      // Use the shared instance
+      return beanInstantiator;
    }
 
 }
