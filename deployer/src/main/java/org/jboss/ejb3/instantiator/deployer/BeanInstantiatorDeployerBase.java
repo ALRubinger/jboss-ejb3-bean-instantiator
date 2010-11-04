@@ -131,6 +131,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
          final String mcBindName = sb.toString();
          final BeanMetaDataBuilder bmdb = BeanMetaDataBuilderFactory.createBuilder(mcBindName,
                BeanInstantiator.class.getName());
+         this.processMetadata(bmdb, unit, ejb);
          try
          {
             kernel.getController().install(bmdb.getBeanMetaData(), instantiator);
@@ -141,6 +142,20 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
          }
          log.info("Installed " + instantiator + " into MC at " + mcBindName);
       }
+   }
+
+   /**
+    * Callback allowing a subclass to customize the bean metadata for the instantiator
+    * (e.g. inject properties, register callbacks, etc.)
+    *
+    * @param beanMetaDataBuilder the metadata builder for the instantiator bean
+    * @param unit the deployment unit
+    * @param ejb the ejb metadata for the instantiator
+    */
+   protected void processMetadata(BeanMetaDataBuilder beanMetaDataBuilder, DeploymentUnit unit,
+                                  JBossEnterpriseBeanMetaData ejb)
+   {
+      // empty default implementation
    }
 
    /**
