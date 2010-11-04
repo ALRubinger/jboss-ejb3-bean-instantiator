@@ -22,7 +22,6 @@
 package org.jboss.ejb3.instantiator.deployer;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -45,7 +44,6 @@ import org.jboss.logging.Logger;
 import org.jboss.reloaded.api.ReloadedDescriptors;
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -186,8 +184,11 @@ public class BeanInstantiatorDeployerUnitTest
             .getResource("ejb3-instantiator-test-deployer-jboss-beans.xml").toURI());
       deployer.deploy(VFSDeploymentFactory.getInstance().createVFSDeployment(testInstantiatorFile));
 
-      // Deploy a dummy
+   }
 
+   public void deploy()
+         throws URISyntaxException, DeploymentException
+   {
       TestCase.assertTrue(deploymentFile.exists());
       final VirtualFile deploymentVf = VFS.getChild(this.getClass().getClassLoader().getResource(deploymentName)
             .toURI());
@@ -200,7 +201,6 @@ public class BeanInstantiatorDeployerUnitTest
     * Undeploys the dummy deployment
     * @throws Exception
     */
-   @After
    public void undeploy() throws Exception
    {
       deployer.removeDeployment(dummyDeployment);
@@ -217,11 +217,13 @@ public class BeanInstantiatorDeployerUnitTest
     * to the deployment unit
     */
    @Test
-   public void beanInstantiatorDeployerInstallsIntoMc() throws IOException, URISyntaxException, DeploymentException
+   public void beanInstantiatorDeployerInstallsIntoMc() throws Exception
    {
+
+      deploy();
+
       // Ensure the attachment is in place
-      final String expectedBindName = BeanInstantiatorDeployerBase.MC_NAMESPACE_PREFIX
-            + deploymentFile.toURI().toString().replace("file:/", "file:///") + "/MockEJB";
+      final String expectedBindName = getExpectedBindName();
       log.info("Looking for: " + expectedBindName);
       final ControllerContext instantiatorContext = server.getKernel().getController()
             .getInstalledContext(expectedBindName);
@@ -231,5 +233,18 @@ public class BeanInstantiatorDeployerUnitTest
       TestCase.assertTrue("The instance installed into MC at " + expectedBindName + " was not of type "
             + BeanInstantiator.class.getName(), instantiatorContext.getTarget() instanceof BeanInstantiator);
 
+      undeploy();
+
+      final ControllerContext instantiatorContextAfterUndeploy = server.getKernel().getController()
+            .getInstalledContext(expectedBindName);
+      TestCase.assertNull("The " + BeanInstantiator.class.getSimpleName() + " registered as " + expectedBindName
+            + " implementation was not removed from MC as expected",
+            instantiatorContextAfterUndeploy);
+   }
+
+   private String getExpectedBindName()
+   {
+      return BeanInstantiatorDeployerBase.MC_NAMESPACE_PREFIX
+            + deploymentFile.toURI().toString().replace("file:/", "file:///") + "/MockEJB";
    }
 }

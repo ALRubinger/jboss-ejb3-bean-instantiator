@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jboss.beans.metadata.api.annotations.Inject;
 import org.jboss.beans.metadata.plugins.builder.BeanMetaDataBuilderFactory;
 import org.jboss.beans.metadata.spi.builder.BeanMetaDataBuilder;
+import org.jboss.dependency.spi.ControllerContext;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
@@ -114,21 +115,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
             throw new IllegalStateException("Bean instantiator implemenentation was not supplied");
          }
          // Construct a name
-         final String unitName = unit.getName();
-         final DeploymentUnit parent = unit.getParent();
-         final String appName = parent != null ? parent.getName() : null;
-         final StringBuilder sb = new StringBuilder();
-         sb.append(MC_NAMESPACE_PREFIX);
-         final char delimiter = '/';
-         if (appName != null)
-         {
-            sb.append(appName);
-            sb.append(delimiter);
-         }
-         sb.append(unitName);
-         sb.append(delimiter);
-         sb.append(ejb.getName());
-         final String mcBindName = sb.toString();
+         final String mcBindName = getInstantiatorMcName(unit, ejb);
          final BeanMetaDataBuilder bmdb = BeanMetaDataBuilderFactory.createBuilder(mcBindName,
                BeanInstantiator.class.getName());
          this.processMetadata(bmdb, unit, ejb);
@@ -141,6 +128,31 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
             throw new DeploymentException("Could not install bean instantiator", e);
          }
          log.info("Installed " + instantiator + " into MC at " + mcBindName);
+      }
+   }
+
+   /**
+    *
+    */
+   @Override
+   public void undeploy(DeploymentUnit unit)
+   {
+      // If not an EJB3 deployment, take no action
+      if (!this.isEjb3ModuleDeployment(unit))
+      {
+         return;
+      }
+
+      final JBossEnterpriseBeansMetaData ejbs = this.getEjbModuleMetadata(unit);
+      assert ejbs != null : "No EJBs found in this deployment, the deployer should have skipped this operation earlier";
+      final Iterator<JBossEnterpriseBeanMetaData> it = ejbs.iterator();
+      while (it.hasNext())
+      {
+         // Get the EJB
+         final JBossEnterpriseBeanMetaData ejb = it.next();
+         final String mcBindName = getInstantiatorMcName(unit, ejb);
+         ControllerContext context = kernel.getController().uninstall(mcBindName);
+         log.info("Uninstalled " + context.getTarget() + " from MC at " + mcBindName);
       }
    }
 
@@ -217,6 +229,25 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
    public void setKernel(final Kernel kernel)
    {
       this.kernel = kernel;
+   }
+
+   private String getInstantiatorMcName(DeploymentUnit unit, JBossEnterpriseBeanMetaData ejb)
+   {
+      final String unitName = unit.getName();
+      final DeploymentUnit parent = unit.getParent();
+      final String appName = parent != null ? parent.getName() : null;
+      final StringBuilder sb = new StringBuilder();
+      sb.append(MC_NAMESPACE_PREFIX);
+      final char delimiter = '/';
+      if (appName != null)
+      {
+         sb.append(appName);
+         sb.append(delimiter);
+      }
+      sb.append(unitName);
+      sb.append(delimiter);
+      sb.append(ejb.getName());
+      return sb.toString();
    }
 
 }
