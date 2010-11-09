@@ -39,6 +39,7 @@ import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.deployers.vfs.spi.client.VFSDeployment;
 import org.jboss.deployers.vfs.spi.client.VFSDeploymentFactory;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
+import org.jboss.ejb3.instantiator.spi.BeanInstantiatorRegistration;
 import org.jboss.kernel.spi.dependency.KernelController;
 import org.jboss.logging.Logger;
 import org.jboss.reloaded.api.ReloadedDescriptors;
@@ -186,8 +187,7 @@ public class BeanInstantiatorDeployerUnitTest
 
    }
 
-   public void deploy()
-         throws URISyntaxException, DeploymentException
+   public void deploy() throws URISyntaxException, DeploymentException
    {
       TestCase.assertTrue(deploymentFile.exists());
       final VirtualFile deploymentVf = VFS.getChild(this.getClass().getClassLoader().getResource(deploymentName)
@@ -238,13 +238,12 @@ public class BeanInstantiatorDeployerUnitTest
       final ControllerContext instantiatorContextAfterUndeploy = server.getKernel().getController()
             .getInstalledContext(expectedBindName);
       TestCase.assertNull("The " + BeanInstantiator.class.getSimpleName() + " registered as " + expectedBindName
-            + " implementation was not removed from MC as expected",
-            instantiatorContextAfterUndeploy);
+            + " implementation was not removed from MC as expected", instantiatorContextAfterUndeploy);
    }
 
    private String getExpectedBindName()
    {
-      return BeanInstantiatorDeployerBase.MC_NAMESPACE_PREFIX
+      return BeanInstantiatorRegistration.NAMESPACE_PREFIX
             + deploymentFile.toURI().toString().replace("file:/", "file:///") + "/MockEJB";
    }
 }

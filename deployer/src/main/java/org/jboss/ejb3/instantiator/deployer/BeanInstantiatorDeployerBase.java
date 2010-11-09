@@ -31,6 +31,7 @@ import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.spi.deployer.helpers.AbstractDeployer;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
+import org.jboss.ejb3.instantiator.spi.BeanInstantiatorRegistration;
 import org.jboss.kernel.Kernel;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
@@ -54,11 +55,6 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
     * Logger
     */
    private static final Logger log = Logger.getLogger(BeanInstantiatorDeployerBase.class);
-
-   /**
-    * Namespace uner which we'll install the BI into MC
-    */
-   static final String MC_NAMESPACE_PREFIX = "org.jboss.ejb.bean.instantiator/";
 
    // ------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------||
@@ -115,7 +111,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
             throw new IllegalStateException("Bean instantiator implemenentation was not supplied");
          }
          // Construct a name
-         final String mcBindName = getInstantiatorMcName(unit, ejb);
+         final String mcBindName = this.getRegistrationNameFromDeploymentUnit(unit, ejb);
          final BeanMetaDataBuilder bmdb = BeanMetaDataBuilderFactory.createBuilder(mcBindName,
                BeanInstantiator.class.getName());
          this.processMetadata(bmdb, unit, ejb);
@@ -150,7 +146,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
       {
          // Get the EJB
          final JBossEnterpriseBeanMetaData ejb = it.next();
-         final String mcBindName = getInstantiatorMcName(unit, ejb);
+         final String mcBindName = this.getRegistrationNameFromDeploymentUnit(unit, ejb);
          ControllerContext context = kernel.getController().uninstall(mcBindName);
          log.info("Uninstalled " + context.getTarget() + " from MC at " + mcBindName);
       }
@@ -165,7 +161,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
     * @param ejb the ejb metadata for the instantiator
     */
    protected void processMetadata(BeanMetaDataBuilder beanMetaDataBuilder, DeploymentUnit unit,
-                                  JBossEnterpriseBeanMetaData ejb)
+         JBossEnterpriseBeanMetaData ejb)
    {
       // empty default implementation
    }
@@ -231,23 +227,14 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
       this.kernel = kernel;
    }
 
-   private String getInstantiatorMcName(DeploymentUnit unit, JBossEnterpriseBeanMetaData ejb)
+   private String getRegistrationNameFromDeploymentUnit(final DeploymentUnit unit, JBossEnterpriseBeanMetaData ejb)
    {
-      final String unitName = unit.getName();
+      assert unit != null : "unit must be specified";
       final DeploymentUnit parent = unit.getParent();
       final String appName = parent != null ? parent.getName() : null;
-      final StringBuilder sb = new StringBuilder();
-      sb.append(MC_NAMESPACE_PREFIX);
-      final char delimiter = '/';
-      if (appName != null)
-      {
-         sb.append(appName);
-         sb.append(delimiter);
-      }
-      sb.append(unitName);
-      sb.append(delimiter);
-      sb.append(ejb.getName());
-      return sb.toString();
+      final String registrationName = BeanInstantiatorRegistration.getInstantiatorRegistrationName(appName,
+            unit.getName(), ejb.getName());
+      return registrationName;
    }
 
 }
