@@ -89,7 +89,9 @@ public class MockEjb3Deployer extends AbstractDeployer
       };
       ejb.setName("MockEJB");
       ejbs.add(ejb);
-      unit.addAttachment(JBossEnterpriseBeansMetaData.class, ejbs);
+      final JBossMetaData md = new JBossMetaData();
+      md.setEnterpriseBeans(ejbs);
+      unit.addAttachment(JBossMetaData.class, md);
 
       log.info("Added: " + ejbs);
 

@@ -36,6 +36,7 @@ import org.jboss.kernel.Kernel;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
+import org.jboss.metadata.ejb.jboss.JBossMetaData;
 
 /**
  * VDF Deployer base to attach a {@link BeanInstantiator} implementation
@@ -70,12 +71,12 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
    // ------------------------------------------------------------------------------||
 
    /**
-    * Create a new deployer instance, setting the input to {@link JBossEnterpriseBeansMetaData}
+    * Create a new deployer instance, setting the input to {@link JBossMetaData}
     * and the output as {@link BeanInstantiator}
     */
    public BeanInstantiatorDeployerBase()
    {
-      this.addInput(JBossEnterpriseBeansMetaData.class);
+      this.addInput(JBossMetaData.class);
       this.addOutput(BeanInstantiator.class);
    }
 
@@ -186,8 +187,17 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
    private JBossEnterpriseBeansMetaData getEjbModuleMetadata(final DeploymentUnit unit)
    {
       assert unit != null : "Deployment Unit must be specified";
-      // Obtain the Merged Metadata
-      final JBossEnterpriseBeansMetaData ejbs = unit.getAttachment(JBossEnterpriseBeansMetaData.class);
+      // Obtain the Metadata
+      final JBossMetaData md = unit.getAttachment(JBossMetaData.class);
+      final JBossEnterpriseBeansMetaData ejbs;
+      if (md != null)
+      {
+         ejbs = md.getEnterpriseBeans();
+      }
+      else
+      {
+         return null;
+      }
       return ejbs;
    }
 
@@ -233,7 +243,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
       final DeploymentUnit parent = unit.getParent();
       final String appName = parent != null ? parent.getName() : null;
       final String registrationName = BeanInstantiatorRegistration.getInstantiatorRegistrationName(appName,
-            unit.getName(), ejb.getName());
+            unit.getSimpleName(), ejb.getName());
       return registrationName;
    }
 
