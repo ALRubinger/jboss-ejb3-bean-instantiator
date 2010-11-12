@@ -21,10 +21,12 @@
  */
 package org.jboss.ejb3.instantiator.deployer;
 
+import org.jboss.beans.metadata.api.annotations.Inject;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
+import org.jboss.reloaded.naming.deployers.javaee.JavaEEComponentInformer;
 
 /**
  * VDF Deployer to attach a single shared {@link BeanInstantiator} implementation
@@ -60,8 +62,9 @@ public class SingletonBeanInstantiatorDeployer extends BeanInstantiatorDeployerB
    // Constructor ------------------------------------------------------------------||
    // ------------------------------------------------------------------------------||
 
-   public SingletonBeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
+   public SingletonBeanInstantiatorDeployer(@Inject JavaEEComponentInformer informer, final BeanInstantiator beanInstantiator)
    {
+      super(informer);
       this.beanInstantiator = beanInstantiator;
    }
 

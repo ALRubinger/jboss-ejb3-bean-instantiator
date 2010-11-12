@@ -243,6 +243,6 @@ public class BeanInstantiatorDeployerUnitTest
 
    private String getExpectedBindName()
    {
-      return BeanInstantiatorRegistration.NAMESPACE_PREFIX + deploymentFile.getName() + "/MockEJB";
+      return BeanInstantiatorRegistration.NAMESPACE_PREFIX + deploymentFile.getName() + "/" + deploymentFile.getName() + "/MockEJB";
    }
 }

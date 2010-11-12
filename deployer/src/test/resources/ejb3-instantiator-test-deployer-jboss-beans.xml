@@ -8,6 +8,7 @@
   <bean name="org.jboss.ejb3.BeanInstantiatorDeployer"
     class="org.jboss.ejb3.instantiator.deployer.TestBeanInstantiatorDeployer">
     <constructor>
+      <parameter name="javaEEComponentInformer"><inject bean="JavaEEComponentInformer"/></parameter>
       <parameter name="beanInstantiator"><inject bean="org.jboss.ejb3.BeanInstantiator"/></parameter>
     </constructor>
     <property name="kernel"><inject bean="JBossServer" property="kernel" /></property>
@@ -19,4 +20,5 @@
    <bean name="org.jboss.ejb3.MockEjb3Deployer"
     class="org.jboss.ejb3.instantiator.deployer.MockEjb3Deployer" />
 
+   <bean name="JavaEEComponentInformer" class="org.jboss.ejb3.instantiator.deployer.MockJavaEEComponentInformer"/>
 </deployment>

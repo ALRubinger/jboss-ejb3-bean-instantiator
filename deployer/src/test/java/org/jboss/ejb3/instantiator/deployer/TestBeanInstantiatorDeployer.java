@@ -25,6 +25,7 @@ import org.jboss.beans.metadata.api.annotations.Inject;
 import org.jboss.deployers.spi.DeploymentException;
 import org.jboss.deployers.structure.spi.DeploymentUnit;
 import org.jboss.ejb3.instantiator.spi.BeanInstantiator;
+import org.jboss.reloaded.naming.deployers.javaee.JavaEEComponentInformer;
 
 /**
  * Extension of the {@link SingletonBeanInstantiatorDeployer} used in testing.
@@ -41,9 +42,9 @@ public class TestBeanInstantiatorDeployer extends SingletonBeanInstantiatorDeplo
     */
    static DeploymentUnit lastDeployment;
 
-   public TestBeanInstantiatorDeployer(@Inject final BeanInstantiator beanInstantiator)
+   public TestBeanInstantiatorDeployer(@Inject JavaEEComponentInformer informer, @Inject final BeanInstantiator beanInstantiator)
    {
-      super(beanInstantiator);
+      super(informer, beanInstantiator);
    }
 
    /**
