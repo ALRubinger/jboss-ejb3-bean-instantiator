@@ -18,5 +18,8 @@
     
    <bean name="org.jboss.ejb3.MockEjb3Deployer"
     class="org.jboss.ejb3.instantiator.deployer.MockEjb3Deployer" />
+    
+   <bean name="org.jboss.ejb3.MockJavaEEComponentInformer" 
+    class="org.jboss.ejb3.instantiator.deployer.MockJavaEEComponentInformer"/>
 
 </deployment>

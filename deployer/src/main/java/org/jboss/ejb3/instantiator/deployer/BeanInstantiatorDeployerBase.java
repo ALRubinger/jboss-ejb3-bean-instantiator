@@ -37,6 +37,7 @@ import org.jboss.logging.Logger;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeanMetaData;
 import org.jboss.metadata.ejb.jboss.JBossEnterpriseBeansMetaData;
 import org.jboss.metadata.ejb.jboss.JBossMetaData;
+import org.jboss.reloaded.naming.deployers.javaee.JavaEEComponentInformer;
 
 /**
  * VDF Deployer base to attach a {@link BeanInstantiator} implementation
@@ -65,6 +66,11 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
     * The kernel used to install {@link BeanInstantiator} implementations
     */
    private Kernel kernel;
+
+   /**
+    * Used to get hold of the app/module/component names out of a deployment unit
+    */
+   private JavaEEComponentInformer javaEEComponentInformer;
 
    // ------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------||
@@ -132,7 +138,7 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
     *
     */
    @Override
-   public void undeploy(DeploymentUnit unit)
+   public void undeploy(final DeploymentUnit unit)
    {
       // If not an EJB3 deployment, take no action
       if (!this.isEjb3ModuleDeployment(unit))
@@ -237,13 +243,19 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
       this.kernel = kernel;
    }
 
+   @Inject
+   public void setJavaEEComponentInformer(final JavaEEComponentInformer informer)
+   {
+      this.javaEEComponentInformer = informer;
+   }
+
    private String getRegistrationNameFromDeploymentUnit(final DeploymentUnit unit, JBossEnterpriseBeanMetaData ejb)
    {
       assert unit != null : "unit must be specified";
-      final DeploymentUnit parent = unit.getParent();
-      final String appName = parent != null ? parent.getName() : null;
-      final String registrationName = BeanInstantiatorRegistration.getInstantiatorRegistrationName(appName,
-            unit.getSimpleName(), ejb.getName());
+      final String appName = this.javaEEComponentInformer.getApplicationName(unit);
+      final String moduleName = this.javaEEComponentInformer.getModuleName(unit);
+      final String registrationName = BeanInstantiatorRegistration.getInstantiatorRegistrationName(appName, moduleName,
+            ejb.getName());
       return registrationName;
    }
 
