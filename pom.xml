@@ -2,8 +2,7 @@
   <!--
   vi:ts=2:sw=2:expandtab:
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- Parent -->
   <parent>
@@ -18,7 +17,7 @@
   <!-- Artifact Information  -->
   <groupId>org.jboss.ejb3.instantiator</groupId>
   <artifactId>jboss-ejb3-instantiator-parent</artifactId>
-  <version>1.0.0-alpha-4-SNAPSHOT</version>
+  <version>1.0.0-alpha-5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>JBoss EJB 3.x Instantiator Aggregator</name>
   <url>http://www.jboss.org</url>
@@ -38,6 +37,13 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -49,4 +55,9 @@
     <module>impl</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:git://github.com/jbossejb3/jboss-ejb3-bean-instantiator.git</connection>
+    <developerConnection>scm:git:git@github.com:jbossejb3/jboss-ejb3-bean-instantiator.git</developerConnection>
+    <url>http://github.com/jbossejb3/jboss-ejb3-bean-instantiator</url>
+  </scm>
 </project>
