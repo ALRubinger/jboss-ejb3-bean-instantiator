@@ -258,5 +258,4 @@ public abstract class BeanInstantiatorDeployerBase extends AbstractDeployer
             ejb.getName());
       return registrationName;
    }
-
 }

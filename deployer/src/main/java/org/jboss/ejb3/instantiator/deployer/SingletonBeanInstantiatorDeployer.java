@@ -62,6 +62,7 @@ public class SingletonBeanInstantiatorDeployer extends BeanInstantiatorDeployerB
 
    public SingletonBeanInstantiatorDeployer(final BeanInstantiator beanInstantiator)
    {
+      super();
       this.beanInstantiator = beanInstantiator;
    }
 
