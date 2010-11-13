@@ -56,4 +56,9 @@
     <module>impl</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:git://github.com/jbossejb3/jboss-ejb3-bean-instantiator.git</connection>
+    <developerConnection>scm:git:git@github.com:jbossejb3/jboss-ejb3-bean-instantiator.git</developerConnection>
+    <url>http://github.com/jbossejb3/jboss-ejb3-bean-instantiator</url>
+  </scm>
 </project>
