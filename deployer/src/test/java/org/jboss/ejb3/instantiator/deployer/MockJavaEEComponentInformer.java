@@ -59,7 +59,7 @@ public class MockJavaEEComponentInformer implements JavaEEComponentInformer
    public String getApplicationName(DeploymentUnit deploymentUnit)
    {
       final DeploymentUnit parent = deploymentUnit.getParent();
-      return parent != null ? parent.getName() : null;
+      return parent != null ? parent.getSimpleName() : deploymentUnit.getSimpleName();
    }
 
    /**
